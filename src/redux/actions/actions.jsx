@@ -4,10 +4,16 @@ export const updateStatusValueInCustomer = value => ({
     value,
   },
 });
-export const addCustomerOpportunity = value => ({
+export const addCustomerOpportunity = (
+  selectedValue,
+  opportunityName,
+  outerIndexxxx,
+) => ({
   type: 'ADD_CUSTOMER_OPPORTUNITY',
   payload: {
-    value,
+    selectedValue,
+    opportunityName,
+    outerIndexxxx,
   },
 });
 export const updateCustomerOpportunity = (outerIndex, innerIndex, value) => ({
@@ -18,11 +24,10 @@ export const updateCustomerOpportunity = (outerIndex, innerIndex, value) => ({
     value,
   },
 });
-export const deleteCustomerOpportunity = (outerIndex, innerIndex, value) => ({
+export const deleteCustomerOpportunity = (outerIndexx, innerIndexx) => ({
   type: 'DELETE_CUSTOMER_OPPORTUNITY',
   payload: {
-    outerIndex,
-    innerIndex,
-    value,
+    outerIndexx,
+    innerIndexx,
   },
 });

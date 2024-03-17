@@ -1,14 +1,40 @@
-import React, {useState} from 'react';
-import {View, Text, TextInput, TouchableOpacity, Modal} from 'react-native';
+import React, {useState, useEffect} from 'react';
+import {
+  View,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  Modal,
+  FlatList,
+} from 'react-native';
 import IonIcon from 'react-native-vector-icons/Ionicons';
 import MCIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 import DropDownPicker from 'react-native-dropdown-picker';
+import {useRoute} from '@react-navigation/native';
+import {connect} from 'react-redux';
 
-const DetailedScreen = () => {
+import {
+  addCustomerOpportunity,
+  deleteCustomerOpportunity,
+} from '../redux/actions/actions';
+
+const DetailedScreen = ({
+  data,
+  onDeleteCustomerOpportunity,
+  onAddCustomerOpportunity,
+}) => {
+  const route = useRoute();
+
+  const {indexx} = route.params;
+
   const [modalVisible, setModalVisible] = useState(false);
   const [selectedValue, setSelectedValue] = useState(null);
   const [showDropdown, setShowDropdown] = useState(false);
   const [opportunityName, setOpportunityName] = React.useState('');
+
+  useEffect(() => {
+    console.log('');
+  }, [data]);
 
   const InfoItem = () => {
     return (
@@ -26,13 +52,13 @@ const DetailedScreen = () => {
         </View>
         <View>
           <Text style={{color: 'black', fontWeight: 600}}>Phone</Text>
-          <Text style={{color: 'black'}}>0719437394</Text>
+          <Text style={{color: 'black'}}>{data[indexx].contact_number}</Text>
         </View>
       </View>
     );
   };
 
-  const RenderItem = () => {
+  const RenderItem = ({item, index}) => {
     return (
       <View
         style={{
@@ -50,9 +76,13 @@ const DetailedScreen = () => {
         }}>
         <View style={{flex: 6}}>
           <Text style={{color: 'black', fontWeight: 600}}>
-            Status : <Text style={{color: 'green'}}>Active</Text>{' '}
+            Status :{' '}
+            <Text
+              style={{color: item.status == 'Closed Lost' ? 'red' : 'green'}}>
+              {item.status}
+            </Text>{' '}
           </Text>
-          <Text style={{color: 'black', marginTop: 5}}>Name : Cleaning</Text>
+          <Text style={{color: 'black', marginTop: 5}}>Name : {item.name}</Text>
         </View>
         <View
           style={{
@@ -62,7 +92,13 @@ const DetailedScreen = () => {
             justifyContent: 'space-between',
           }}>
           <MCIcon name="tooltip-edit" size={35} color="#3b2eb0" />
-          <MCIcon name="delete" size={35} color="#3b2eb0" />
+          <TouchableOpacity
+            onPress={() => {
+              //console.log(0, index);
+              onDeleteCustomerOpportunity(indexx, index);
+            }}>
+            <MCIcon name="delete" size={35} color="#3b2eb0" />
+          </TouchableOpacity>
         </View>
       </View>
     );
@@ -78,9 +114,9 @@ const DetailedScreen = () => {
           backgroundColor: 'white',
         }}>
         <Text style={{fontSize: 30, color: 'black', fontWeight: 600}}>
-          Charith Wijenayake
+          {data[indexx].name}
         </Text>
-        <Text style={{color: 'black'}}>ID : ID8763292</Text>
+        <Text style={{color: 'black'}}>ID : {data[indexx].id}</Text>
       </View>
       <View
         style={{
@@ -104,7 +140,7 @@ const DetailedScreen = () => {
           </View>
           <View>
             <Text style={{color: 'black', fontWeight: 600}}>E-Mail</Text>
-            <Text style={{color: 'black'}}>jhdgejhdhed@gmail.com</Text>
+            <Text style={{color: 'black'}}>{data[indexx].email}</Text>
           </View>
         </View>
         <View
@@ -127,10 +163,24 @@ const DetailedScreen = () => {
             </View>
             <View>
               <Text style={{color: 'black', fontWeight: 600}}>Status</Text>
-              <Text style={{color: 'green'}}>Active</Text>
+              <Text
+                style={{
+                  color:
+                    data[indexx].status == 'Active'
+                      ? 'green'
+                      : data[indexx].status == 'Inactive'
+                      ? 'red'
+                      : 'brown',
+                }}>
+                {data[indexx].status}
+              </Text>
             </View>
           </View>
-          <TouchableOpacity onPress={() => setModalVisible(true)}>
+          <TouchableOpacity
+            onPress={() => {
+              console.log(indexx);
+              setModalVisible(true);
+            }}>
             <MCIcon name="tooltip-edit" size={35} color="#3b2eb0" />
           </TouchableOpacity>
         </View>
@@ -162,9 +212,11 @@ const DetailedScreen = () => {
               <IonIcon name="add" size={40} color="#3b2eb0" />
             </TouchableOpacity>
           </View>
-          <RenderItem />
-          <RenderItem />
-          <RenderItem />
+          <FlatList
+            data={data[indexx].opportunities}
+            renderItem={RenderItem}
+            keyExtractor={item => item.id}
+          />
         </View>
       </View>
 
@@ -260,7 +312,14 @@ const DetailedScreen = () => {
                 justifyContent: 'center',
                 alignItems: 'center',
               }}
-              onPress={() => setModalVisible(false)}>
+              onPress={() => {
+                onAddCustomerOpportunity(
+                  selectedValue,
+                  opportunityName,
+                  indexx,
+                );
+                setModalVisible(false);
+              }}>
               <Text style={{color: 'white', fontSize: 20, marginBottom: 10}}>
                 Save
               </Text>
@@ -272,4 +331,18 @@ const DetailedScreen = () => {
   );
 };
 
-export default DetailedScreen;
+const mapStateToProps = state => ({
+  data: state.mainReducer.data,
+});
+
+const mapDispatchToProps = {
+  onDeleteCustomerOpportunity: deleteCustomerOpportunity, // Map your action creator to props
+  onAddCustomerOpportunity: addCustomerOpportunity, // Map your action creator to props
+};
+//const appOppotunity = {
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps,
+  //appOppotunity,
+)(DetailedScreen);

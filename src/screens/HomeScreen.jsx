@@ -1,64 +1,63 @@
 import {View, Text, FlatList, TextInput, TouchableOpacity} from 'react-native';
 import React, {useState} from 'react';
-//import {useNavigation} from '@react-navigation/native';
+import {connect} from 'react-redux';
 
-const HomeScreen = ({navigation}) => {
-  //const navigation = useNavigation();
+const HomeScreen = ({navigation, data}) => {
   const [searchQuery, setSearchQuery] = useState('');
-  const [data, setData] = useState([
-    {
-      id: 'ID284939',
-      name: 'Charith Wijenayake',
-      status: 'Active',
-      email: 'jdurbf@gmail.com',
-      contact_number: '0712347896',
-      opportunities: [
-        {
-          name: 'Cleaning',
-          status: 'New',
-        },
-        {
-          name: 'Marketing',
-          status: 'Closed Won',
-        },
-      ],
-    },
-    {
-      id: 'ID874028',
-      name: 'Madhushi Paranagama',
-      status: 'Inactive',
-      email: 'kghtkfh@gmail.com',
-      contact_number: '0715896093',
-      opportunities: [
-        {
-          name: 'Cleaning',
-          status: 'New',
-        },
-        {
-          name: 'Marketing',
-          status: 'Closed Won',
-        },
-      ],
-    },
-    {
-      id: 'ID184309',
-      name: 'Soma Abeywickama',
-      status: 'Lead',
-      email: 'hajakrn@gmail.com',
-      contact_number: '0714829054',
-      opportunities: [
-        {
-          name: 'Cleaning',
-          status: 'New',
-        },
-        {
-          name: 'Marketing',
-          status: 'Closed Won',
-        },
-      ],
-    },
-    // Add more items as needed
-  ]);
+  // const [dataa, setData] = useState([
+  //   {
+  //     id: 'ID284939',
+  //     name: 'Charith Wijenayake',
+  //     status: 'Active',
+  //     email: 'jdurbf@gmail.com',
+  //     contact_number: '0712347896',
+  //     opportunities: [
+  //       {
+  //         name: 'Cleaning',
+  //         status: 'New',
+  //       },
+  //       {
+  //         name: 'Marketing',
+  //         status: 'Closed Won',
+  //       },
+  //     ],
+  //   },
+  //   {
+  //     id: 'ID874028',
+  //     name: 'Madhushi Paranagama',
+  //     status: 'Inactive',
+  //     email: 'kghtkfh@gmail.com',
+  //     contact_number: '0715896093',
+  //     opportunities: [
+  //       {
+  //         name: 'Cleaning',
+  //         status: 'New',
+  //       },
+  //       {
+  //         name: 'Marketing',
+  //         status: 'Closed Won',
+  //       },
+  //     ],
+  //   },
+  //   {
+  //     id: 'ID184309',
+  //     name: 'Soma Abeywickama',
+  //     status: 'Lead',
+  //     email: 'hajakrn@gmail.com',
+  //     contact_number: '0714829054',
+  //     opportunities: [
+  //       {
+  //         name: 'Cleaning',
+  //         status: 'New',
+  //       },
+  //       {
+  //         name: 'Marketing',
+  //         status: 'Closed Won',
+  //       },
+  //     ],
+  //   },
+  //   // Add more items as needed
+  // ]);
 
   const getFirstLetters = sentence => {
     // Split the sentence into words
@@ -80,7 +79,10 @@ const HomeScreen = ({navigation}) => {
           alignItems: 'center',
           marginBottom: 5,
         }}
-        onPress={() => navigation.navigate('Details', index)}>
+        onPress={() => {
+          console.log(index);
+          navigation.navigate('Details', {indexx: index});
+        }}>
         <View
           style={{
             width: '90%',
@@ -169,4 +171,9 @@ const HomeScreen = ({navigation}) => {
   );
 };
 
-export default HomeScreen;
+const mapStateToProps = state => ({
+  data: state.mainReducer.data,
+});
+
+//export default HomeScreen;
+export default connect(mapStateToProps)(HomeScreen);

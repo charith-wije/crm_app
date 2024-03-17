@@ -8,10 +8,12 @@ const initialState = {
       contact_number: '0712347896',
       opportunities: [
         {
+          id: 1,
           name: 'Cleaning',
           status: 'New',
         },
         {
+          id: 2,
           name: 'Marketing',
           status: 'Closed Won',
         },
@@ -25,12 +27,14 @@ const initialState = {
       contact_number: '0715896093',
       opportunities: [
         {
+          id: 1,
           name: 'Cleaning',
           status: 'New',
         },
         {
+          id: 2,
           name: 'Marketing',
-          status: 'Closed Won',
+          status: 'Closed Lost',
         },
       ],
     },
@@ -42,12 +46,14 @@ const initialState = {
       contact_number: '0714829054',
       opportunities: [
         {
+          id: 1,
           name: 'Cleaning',
           status: 'New',
         },
         {
+          id: 2,
           name: 'Marketing',
-          status: 'Closed Won',
+          status: 'New',
         },
       ],
     },
@@ -60,29 +66,39 @@ const mainReducer = (state = initialState, action) => {
     case 'UPDATE_CUSTOMER_OPPORTUNITY':
       const {outerIndex, innerIndex, updatedInfo} = action.payload;
       const updatedData = [...state.data];
-      const updatedInnerArray = [...updatedData[outerIndex]];
-      updatedInnerArray[innerIndex] = updatedInfo;
-      updatedData[outerIndex] = updatedInnerArray;
+      // const updatedInnerArray = [...updatedData[outerIndex].opportunities];
+      // updatedInnerArray.splice(innerIndex, 1);
+      // updatedData[outerIndex].opportunities = updatedInnerArray;
+
       return {
         ...state,
         data: updatedData,
       };
     case 'ADD_CUSTOMER_OPPORTUNITY':
-      const {value} = action.payload;
-      const updatedDataa = state.data.map(innerArray => [...innerArray, value]);
+      const {selectedValue, opportunityName, outerIndexxxx} = action.payload;
+      console.log(selectedValue, opportunityName, outerIndexxxx, 'rrrrrr');
+      const updatedDataa = [...state.data];
+      const updatedInnerArrray = updatedDataa[outerIndexxxx].opportunities;
+      updatedInnerArrray.push({
+        id: updatedInnerArrray.length + 1,
+        name: opportunityName,
+        status: selectedValue,
+      });
+      updatedDataa[outerIndexxxx].opportunities = updatedInnerArrray;
 
       return {
         ...state,
         data: updatedDataa,
       };
     case 'DELETE_CUSTOMER_OPPORTUNITY':
+      //console.log('rrrrrr');
       const {outerIndexx, innerIndexx} = action.payload;
-      const updatedDataaaa = state.data.map((innerArray, index) => {
-        if (index === outerIndexx) {
-          return innerArray.filter((_, idx) => idx !== innerIndexx);
-        }
-        return innerArray;
-      });
+      //console.log(outerIndexx, innerIndexx, 'pop');
+      const updatedDataaaa = [...state.data];
+      //console.log(updatedDataaaa[outerIndexx].opportunities, 'pop');
+      const updatedInnerArray = updatedDataaaa[outerIndexx].opportunities;
+      updatedInnerArray.splice(innerIndexx, 1);
+      updatedDataaaa[outerIndexx].opportunities = updatedInnerArray;
 
       return {
         ...state,
