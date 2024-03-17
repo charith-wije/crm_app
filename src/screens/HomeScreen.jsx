@@ -1,63 +1,16 @@
-import {View, Text, FlatList, TextInput, TouchableOpacity} from 'react-native';
+import {
+  View,
+  Text,
+  FlatList,
+  TextInput,
+  StyleSheet,
+  TouchableOpacity,
+} from 'react-native';
 import React, {useState} from 'react';
 import {connect} from 'react-redux';
 
 const HomeScreen = ({navigation, data}) => {
   const [searchQuery, setSearchQuery] = useState('');
-  // const [dataa, setData] = useState([
-  //   {
-  //     id: 'ID284939',
-  //     name: 'Charith Wijenayake',
-  //     status: 'Active',
-  //     email: 'jdurbf@gmail.com',
-  //     contact_number: '0712347896',
-  //     opportunities: [
-  //       {
-  //         name: 'Cleaning',
-  //         status: 'New',
-  //       },
-  //       {
-  //         name: 'Marketing',
-  //         status: 'Closed Won',
-  //       },
-  //     ],
-  //   },
-  //   {
-  //     id: 'ID874028',
-  //     name: 'Madhushi Paranagama',
-  //     status: 'Inactive',
-  //     email: 'kghtkfh@gmail.com',
-  //     contact_number: '0715896093',
-  //     opportunities: [
-  //       {
-  //         name: 'Cleaning',
-  //         status: 'New',
-  //       },
-  //       {
-  //         name: 'Marketing',
-  //         status: 'Closed Won',
-  //       },
-  //     ],
-  //   },
-  //   {
-  //     id: 'ID184309',
-  //     name: 'Soma Abeywickama',
-  //     status: 'Lead',
-  //     email: 'hajakrn@gmail.com',
-  //     contact_number: '0714829054',
-  //     opportunities: [
-  //       {
-  //         name: 'Cleaning',
-  //         status: 'New',
-  //       },
-  //       {
-  //         name: 'Marketing',
-  //         status: 'Closed Won',
-  //       },
-  //     ],
-  //   },
-  //   // Add more items as needed
-  // ]);
 
   const getFirstLetters = sentence => {
     // Split the sentence into words
@@ -72,44 +25,19 @@ const HomeScreen = ({navigation, data}) => {
   const renderItem = ({item, index}) => {
     return (
       <TouchableOpacity
-        style={{
-          width: '100%',
-          height: 70,
-          justifyContent: 'center',
-          alignItems: 'center',
-          marginBottom: 5,
-        }}
+        style={styles.renderItemMainContainer}
         onPress={() => {
-          console.log(index);
           navigation.navigate('Details', {indexx: index});
         }}>
-        <View
-          style={{
-            width: '90%',
-            height: '100%',
-            borderRadius: 10,
-            backgroundColor: 'white',
-            alignItems: 'center',
-            marginHorizontal: 15,
-            flexDirection: 'row',
-          }}>
-          <View
-            style={{
-              width: 45,
-              height: 45,
-              borderRadius: 25,
-              marginRight: 15,
-              backgroundColor: 'blue',
-              justifyContent: 'center',
-              alignItems: 'center',
-            }}>
-            <Text style={{color: 'white', fontSize: 22}}>
+        <View style={styles.renderItemSubContainer1}>
+          <View style={styles.renderItemSubContainer2}>
+            <Text style={styles.renderItemTwoFirstLetters}>
               {getFirstLetters(item.name)}
             </Text>
           </View>
           <View>
-            <Text style={{color: 'black', fontSize: 18}}>{item.name}</Text>
-            <Text style={{color: 'black', fontSize: 12}}>{item.id}</Text>
+            <Text style={styles.renderItemName}>{item.name}</Text>
+            <Text style={styles.renderItemId}>{item.id}</Text>
           </View>
           <Text
             style={{
@@ -135,34 +63,16 @@ const HomeScreen = ({navigation, data}) => {
 
   return (
     <>
-      <View
-        style={{
-          width: '100%',
-          height: 40,
-          justifyContent: 'center',
-          alignItems: 'center',
-          marginBottom: 5,
-          marginTop: 15,
-        }}>
+      <View style={styles.mainContainer}>
         <TextInput
-          style={{
-            height: '100%',
-            width: '90%',
-            borderColor: 'gray',
-            borderWidth: 1,
-            marginBottom: 10,
-            borderRadius: 10,
-            marginHorizontal: 15,
-            paddingLeft: 10,
-            color: '#000',
-          }}
+          style={styles.mainContainerSearchBar}
           onChangeText={text => setSearchQuery(text)}
           value={searchQuery}
           placeholder="Search..."
           placeholderTextColor="grey"
         />
       </View>
-      <View style={{width: '100%', height: 500}}>
+      <View style={styles.mainContainerFlatlist}>
         <FlatList
           data={filteredData}
           renderItem={renderItem}
@@ -173,9 +83,66 @@ const HomeScreen = ({navigation, data}) => {
   );
 };
 
+const styles = StyleSheet.create({
+  mainContainer: {
+    width: '100%',
+    height: 40,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginBottom: 5,
+    marginTop: 15,
+  },
+
+  mainContainerSearchBar: {
+    height: '100%',
+    width: '90%',
+    borderColor: 'gray',
+    borderWidth: 1,
+    marginBottom: 10,
+    borderRadius: 10,
+    marginHorizontal: 15,
+    paddingLeft: 10,
+    color: '#000',
+  },
+
+  mainContainerFlatlist: {width: '100%', height: 500},
+
+  renderItemMainContainer: {
+    width: '100%',
+    height: 70,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginBottom: 5,
+  },
+  renderItemSubContainer1: {
+    width: '90%',
+    height: '100%',
+    borderRadius: 10,
+    backgroundColor: 'white',
+    alignItems: 'center',
+    marginHorizontal: 15,
+    flexDirection: 'row',
+  },
+
+  renderItemSubContainer2: {
+    width: 45,
+    height: 45,
+    borderRadius: 25,
+    marginRight: 15,
+    backgroundColor: 'blue',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+
+  renderItemTwoFirstLetters: {color: 'white', fontSize: 22},
+
+  renderItemName: {color: 'black', fontSize: 18},
+
+  renderItemId: {color: 'black', fontSize: 12},
+});
+
 const mapStateToProps = state => ({
   data: state.mainReducer.data,
 });
 
-//export default HomeScreen;
 export default connect(mapStateToProps)(HomeScreen);
