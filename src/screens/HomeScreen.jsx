@@ -162,11 +162,13 @@ const HomeScreen = ({navigation, data}) => {
           placeholderTextColor="grey"
         />
       </View>
-      <FlatList
-        data={filteredData}
-        renderItem={renderItem}
-        keyExtractor={item => item.id.toString()}
-      />
+      <View style={{width: '100%', height: 500}}>
+        <FlatList
+          data={filteredData}
+          renderItem={renderItem}
+          keyExtractor={item => item.id.toString()}
+        />
+      </View>
     </>
   );
 };

@@ -2,10 +2,10 @@ const initialState = {
   data: [
     {
       id: 'ID284939',
-      name: 'Charith Wijenayake',
+      name: 'Dillon Baer',
       status: 'Active',
-      email: 'jdurbf@gmail.com',
-      contact_number: '0712347896',
+      email: 'dillonbaer@detaildriveby.com',
+      contact_number: '+94712347896',
       opportunities: [
         {
           id: 1,
@@ -21,10 +21,10 @@ const initialState = {
     },
     {
       id: 'ID874028',
-      name: 'Madhushi Paranagama',
+      name: 'Shine Smith',
       status: 'Inactive',
-      email: 'kghtkfh@gmail.com',
-      contact_number: '0715896093',
+      email: 'shinedetailingohio@gmail.com',
+      contact_number: '+61715896093',
       opportunities: [
         {
           id: 1,
@@ -40,9 +40,9 @@ const initialState = {
     },
     {
       id: 'ID184309',
-      name: 'Soma Abeywickama',
+      name: 'Joshua Limm',
       status: 'Lead',
-      email: 'hajakrn@gmail.com',
+      email: 'joshuarowe2017@gmail.com',
       contact_number: '0714829054',
       opportunities: [
         {
@@ -57,6 +57,64 @@ const initialState = {
         },
       ],
     },
+    {
+      id: 'ID184630',
+      name: 'Bell Hardy',
+      status: 'Lead',
+      email: 'belmont@watchtv.net',
+      contact_number: '0714829054',
+      opportunities: [
+        {
+          id: 1,
+          name: 'Cleaning',
+          status: 'New',
+        },
+        {
+          id: 2,
+          name: 'Marketing',
+          status: 'New',
+        },
+      ],
+    },
+    {
+      id: 'ID184642',
+      name: 'Cristy Rom',
+      status: 'Lead',
+      email: 'unwind@crystalcreekpostofcecottages.com',
+      contact_number: '+544829054',
+      opportunities: [
+        {
+          id: 1,
+          name: 'Cleaning',
+          status: 'New',
+        },
+        {
+          id: 2,
+          name: 'Marketing',
+          status: 'New',
+        },
+      ],
+    },
+    {
+      id: 'ID364642',
+      name: 'Tim David',
+      status: 'Lead',
+      email: 'parts@armysauto.com',
+      contact_number: '0714829054',
+      opportunities: [
+        {
+          id: 1,
+          name: 'Cleaning',
+          status: 'New',
+        },
+        {
+          id: 2,
+          name: 'Marketing',
+          status: 'New',
+        },
+      ],
+    },
+
     // Add more items as needed
   ],
 };
@@ -64,11 +122,13 @@ const initialState = {
 const mainReducer = (state = initialState, action) => {
   switch (action.type) {
     case 'UPDATE_CUSTOMER_OPPORTUNITY':
-      const {outerIndex, innerIndex, updatedInfo} = action.payload;
+      const {selectedValuee, opportunityNamee, outerIndexxxxx, innerIndexxxxx} =
+        action.payload;
       const updatedData = [...state.data];
-      // const updatedInnerArray = [...updatedData[outerIndex].opportunities];
-      // updatedInnerArray.splice(innerIndex, 1);
-      // updatedData[outerIndex].opportunities = updatedInnerArray;
+
+      const updatedInnerArrrayy = updatedData[outerIndexxxxx].opportunities;
+      updatedInnerArrrayy[innerIndexxxxx].name = opportunityNamee;
+      updatedInnerArrrayy[innerIndexxxxx].status = selectedValuee;
 
       return {
         ...state,
@@ -80,7 +140,7 @@ const mainReducer = (state = initialState, action) => {
       const updatedDataa = [...state.data];
       const updatedInnerArrray = updatedDataa[outerIndexxxx].opportunities;
       updatedInnerArrray.push({
-        id: updatedInnerArrray.length + 1,
+        id: Math.floor(Math.random() * 90000) + 10000,
         name: opportunityName,
         status: selectedValue,
       });
@@ -91,11 +151,8 @@ const mainReducer = (state = initialState, action) => {
         data: updatedDataa,
       };
     case 'DELETE_CUSTOMER_OPPORTUNITY':
-      //console.log('rrrrrr');
       const {outerIndexx, innerIndexx} = action.payload;
-      //console.log(outerIndexx, innerIndexx, 'pop');
       const updatedDataaaa = [...state.data];
-      //console.log(updatedDataaaa[outerIndexx].opportunities, 'pop');
       const updatedInnerArray = updatedDataaaa[outerIndexx].opportunities;
       updatedInnerArray.splice(innerIndexx, 1);
       updatedDataaaa[outerIndexx].opportunities = updatedInnerArray;
@@ -105,9 +162,9 @@ const mainReducer = (state = initialState, action) => {
         data: updatedDataaaa,
       };
     case 'UPDATE_CUSTOMER_STATUS':
-      const {index, statusValue} = action.payload;
+      const {outerIndexxxxxxx, selectedValueeeeeee} = action.payload;
       const updatedDataaa = [...state.data];
-      updatedDataaa[index].status = statusValue;
+      updatedDataaa[outerIndexxxxxxx].status = selectedValueeeeeee;
 
       return {
         ...state,

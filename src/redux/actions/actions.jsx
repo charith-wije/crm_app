@@ -1,7 +1,11 @@
-export const updateStatusValueInCustomer = value => ({
+export const updateStatusValueInCustomer = (
+  selectedValueeeeeee,
+  outerIndexxxxxxx,
+) => ({
   type: 'UPDATE_CUSTOMER_STATUS',
   payload: {
-    value,
+    selectedValueeeeeee,
+    outerIndexxxxxxx,
   },
 });
 export const addCustomerOpportunity = (
@@ -16,12 +20,18 @@ export const addCustomerOpportunity = (
     outerIndexxxx,
   },
 });
-export const updateCustomerOpportunity = (outerIndex, innerIndex, value) => ({
+export const updateCustomerOpportunity = (
+  selectedValuee,
+  opportunityNamee,
+  outerIndexxxxx,
+  innerIndexxxxx,
+) => ({
   type: 'UPDATE_CUSTOMER_OPPORTUNITY',
   payload: {
-    outerIndex,
-    innerIndex,
-    value,
+    selectedValuee,
+    opportunityNamee,
+    outerIndexxxxx,
+    innerIndexxxxx,
   },
 });
 export const deleteCustomerOpportunity = (outerIndexx, innerIndexx) => ({

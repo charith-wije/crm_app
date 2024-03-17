@@ -16,12 +16,16 @@ import {connect} from 'react-redux';
 import {
   addCustomerOpportunity,
   deleteCustomerOpportunity,
+  updateCustomerOpportunity,
+  updateStatusValueInCustomer,
 } from '../redux/actions/actions';
 
 const DetailedScreen = ({
   data,
   onDeleteCustomerOpportunity,
   onAddCustomerOpportunity,
+  onUpdateCustomerOpportunity,
+  onUpdateCustomerStatus,
 }) => {
   const route = useRoute();
 
@@ -31,6 +35,11 @@ const DetailedScreen = ({
   const [selectedValue, setSelectedValue] = useState(null);
   const [showDropdown, setShowDropdown] = useState(false);
   const [opportunityName, setOpportunityName] = React.useState('');
+  const [currentIndex, setCurrentIndex] = useState(null);
+
+  const [statusClicked, setStatusClicked] = useState(null);
+  const [editClicked, setEditClicked] = useState(null);
+  const [plusClicked, setPlusClicked] = useState(null);
 
   useEffect(() => {
     console.log('');
@@ -67,7 +76,6 @@ const DetailedScreen = ({
           alignItems: 'center',
           flexDirection: 'row',
           paddingVertical: 10,
-          //backgroundColor: '#c3e8e6',
           borderRadius: 10,
           padding: 5,
           marginBottom: 10,
@@ -91,10 +99,18 @@ const DetailedScreen = ({
             alignContent: 'center',
             justifyContent: 'space-between',
           }}>
-          <MCIcon name="tooltip-edit" size={35} color="#3b2eb0" />
           <TouchableOpacity
             onPress={() => {
-              //console.log(0, index);
+              setEditClicked(true);
+              setCurrentIndex(index);
+              setModalVisible(true);
+              setOpportunityName(item.name);
+              setSelectedValue(item.status);
+            }}>
+            <MCIcon name="tooltip-edit" size={35} color="#3b2eb0" />
+          </TouchableOpacity>
+          <TouchableOpacity
+            onPress={() => {
               onDeleteCustomerOpportunity(indexx, index);
             }}>
             <MCIcon name="delete" size={35} color="#3b2eb0" />
@@ -178,7 +194,8 @@ const DetailedScreen = ({
           </View>
           <TouchableOpacity
             onPress={() => {
-              console.log(indexx);
+              setSelectedValue(data[indexx].status);
+              setStatusClicked(true);
               setModalVisible(true);
             }}>
             <MCIcon name="tooltip-edit" size={35} color="#3b2eb0" />
@@ -189,6 +206,7 @@ const DetailedScreen = ({
             width: '90%',
             marginTop: 10,
             marginLeft: 20,
+            flex: 1,
           }}>
           <View
             style={{
@@ -208,15 +226,22 @@ const DetailedScreen = ({
             </Text>
             <TouchableOpacity
               //style={{marginRight: 20}}
-              onPress={() => setModalVisible(true)}>
+              onPress={() => {
+                setOpportunityName(null);
+                setSelectedValue(null);
+                setPlusClicked(true);
+                setModalVisible(true);
+              }}>
               <IonIcon name="add" size={40} color="#3b2eb0" />
             </TouchableOpacity>
           </View>
-          <FlatList
-            data={data[indexx].opportunities}
-            renderItem={RenderItem}
-            keyExtractor={item => item.id}
-          />
+          <View style={{width: '100%', height: 300}}>
+            <FlatList
+              data={data[indexx].opportunities}
+              renderItem={RenderItem}
+              keyExtractor={item => item.id}
+            />
+          </View>
         </View>
       </View>
 
@@ -237,13 +262,13 @@ const DetailedScreen = ({
           <View
             style={{
               width: '90%',
-              height: '90%',
+              height: !statusClicked ? '80%' : '50%',
               backgroundColor: 'white',
               padding: 20,
               borderRadius: 10,
               alignItems: 'center',
             }}>
-            {false && (
+            {statusClicked && (
               <>
                 <Text style={{color: 'black', fontSize: 20, marginBottom: 10}}>
                   Customer Status
@@ -263,7 +288,7 @@ const DetailedScreen = ({
               </>
             )}
 
-            {true && (
+            {!statusClicked && (
               <>
                 <Text style={{color: 'black', fontSize: 20, marginBottom: 10}}>
                   Opportunity Status
@@ -272,9 +297,9 @@ const DetailedScreen = ({
                   open={showDropdown}
                   value={selectedValue}
                   items={[
-                    {label: 'Active', value: 'Active'},
-                    {label: 'Inactive', value: 'Inactive'},
-                    {label: 'Lead', value: 'Lead'},
+                    {label: 'New', value: 'New'},
+                    {label: 'Closed Won', value: 'Closed Won'},
+                    {label: 'Closed Lost', value: 'Closed Lost'},
                   ]}
                   setOpen={setShowDropdown}
                   setValue={setSelectedValue}
@@ -301,6 +326,58 @@ const DetailedScreen = ({
                 />
               </>
             )}
+
+            <TouchableOpacity
+              style={{
+                position: 'absolute',
+                bottom: 100,
+                width: 200,
+                height: 60,
+                borderRadius: 20,
+                backgroundColor: 'blue',
+                justifyContent: 'center',
+                alignItems: 'center',
+              }}
+              onPress={() => {
+                if (plusClicked) {
+                  if (
+                    selectedValue !== null &&
+                    selectedValue !== '' &&
+                    opportunityName !== null &&
+                    opportunityName !== ''
+                  ) {
+                    onAddCustomerOpportunity(
+                      selectedValue,
+                      opportunityName,
+                      indexx,
+                    );
+                  }
+                } else if (editClicked) {
+                  if (
+                    selectedValue !== null &&
+                    selectedValue !== '' &&
+                    opportunityName !== null &&
+                    opportunityName !== ''
+                  ) {
+                    onUpdateCustomerOpportunity(
+                      selectedValue,
+                      opportunityName,
+                      indexx,
+                      currentIndex,
+                    );
+                  }
+                } else if (statusClicked) {
+                  onUpdateCustomerStatus(selectedValue, indexx);
+                }
+                setModalVisible(false);
+                setEditClicked(null);
+                setStatusClicked(null);
+                setPlusClicked(null);
+              }}>
+              <Text style={{color: 'white', fontSize: 20, marginBottom: 10}}>
+                Save
+              </Text>
+            </TouchableOpacity>
             <TouchableOpacity
               style={{
                 position: 'absolute',
@@ -313,15 +390,13 @@ const DetailedScreen = ({
                 alignItems: 'center',
               }}
               onPress={() => {
-                onAddCustomerOpportunity(
-                  selectedValue,
-                  opportunityName,
-                  indexx,
-                );
                 setModalVisible(false);
+                setEditClicked(null);
+                setStatusClicked(null);
+                setPlusClicked(null);
               }}>
               <Text style={{color: 'white', fontSize: 20, marginBottom: 10}}>
-                Save
+                Cancel
               </Text>
             </TouchableOpacity>
           </View>
@@ -338,11 +413,9 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = {
   onDeleteCustomerOpportunity: deleteCustomerOpportunity, // Map your action creator to props
   onAddCustomerOpportunity: addCustomerOpportunity, // Map your action creator to props
+  onUpdateCustomerOpportunity: updateCustomerOpportunity, // Map your action creator to props
+  onUpdateCustomerStatus: updateStatusValueInCustomer, // Map your action creator to props
 };
 //const appOppotunity = {
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps,
-  //appOppotunity,
-)(DetailedScreen);
+export default connect(mapStateToProps, mapDispatchToProps)(DetailedScreen);
