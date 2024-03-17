@@ -80,7 +80,7 @@ const HomeScreen = ({navigation}) => {
           alignItems: 'center',
           marginBottom: 5,
         }}
-        onPress={() => navigation.navigate('Details')}>
+        onPress={() => navigation.navigate('Details', index)}>
         <View
           style={{
             width: '90%',
